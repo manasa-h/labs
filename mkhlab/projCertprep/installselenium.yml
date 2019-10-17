@@ -1,5 +1,5 @@
 ---
-- hosts: slave2
+- hosts: test
   become: yes
   become_method: sudo
   strategy: free
@@ -20,13 +20,13 @@
       apt: name=openjdk-8-jdk state=present
 
     - name: create directory
-      file: "path=/tmp/selenium state=directory recurse=yes"
+      file: "path=/home/devops/selenium state=directory recurse=yes"
       tags: [configuration, selenium, selenium-create-directory]
 
     - name: Download Selenium
       get_url:
         url: "https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar"
-        dest: "/tmp/selenium/selenium-server-standalone-3.141.59.jar"
+        dest: "/home/devops/selenium/selenium-server-standalone-3.141.59.jar"
       tags: [configuration, selenium, selenium-download]
 
     - name: Add Chrome key (if configured, Debian)
@@ -51,6 +51,12 @@
         dest: /usr/bin
         mode: 0755
         copy: no
+        
+    - name: Install TestNG
+      unarchive:
+        src: "http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip"
+        dest: /home/devops/selenium        
+        copy: no    
   
     - name: Install xvfb
       package: name=xvfb
